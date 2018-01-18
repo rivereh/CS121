@@ -26,3 +26,5 @@ if radius <= 300:
     turtle.done()
 else:
     print(radius, "too big to draw on screen")
+
+# Test case for 30 should output 2827

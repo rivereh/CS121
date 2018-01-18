@@ -47,3 +47,5 @@ def draw_cube():
 
 
 draw_cube()
+
+# Test case for 10, 10, 10 should output 1000
