@@ -10,3 +10,6 @@
 print('Hello, River!')
 
 # test case should print 'Hello, River!'
+
+for x in range(3):
+    print(x)
