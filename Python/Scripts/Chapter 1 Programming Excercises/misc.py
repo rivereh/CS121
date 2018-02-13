@@ -1,16 +1,12 @@
 """
     CS121 W18
-    CURRENCY (DOLLARS AND CENTS)
+    EXERCISE 1.1
     RIVER HILL
-    ASKS USER FOR A CURRENCY AMOUNT THEN BREAKS IT DOWN
-    INTO DOLLARS AND CENTS
     1/29/18
     PYTHON 3.6.4
 """
 
-
-a, b, c = eval(input("Please enter integers seperated by commas for a, b, and c: "))
-calc = math.pow(b, 2) - (4 * a * c)
-
+calc = (4 ** 2) - (4 * 3 * 5)
 print(calc)
 
+# Test case should be -44
