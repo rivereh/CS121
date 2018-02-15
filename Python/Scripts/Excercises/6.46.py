@@ -23,10 +23,7 @@ for x in range(numberOfSides):
         turtle.goto(points[x])
         turtle.pendown()
         turtle.goto(points[y])
-
-turtle.penup()
-turtle.goto(0, 0)
-
+        
 turtle.done()
 
 # clap controlled edpy
