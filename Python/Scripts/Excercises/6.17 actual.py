@@ -1,6 +1,4 @@
 
-import math
-
 
 def is_valid(side1, side2, side3):
     if side1 + side2 > side3:
@@ -18,6 +16,8 @@ def area(side1, side2, side3):
     num = ((s * (s - side1) * (s - side2) * (s - side3)) ** 0.5)
     if isinstance(num, complex):
         return "Input is invalid"
+    else:
+        return num
 
 
 input1, input2, input3 = eval(input("Enter three sides for a triangle: "))
