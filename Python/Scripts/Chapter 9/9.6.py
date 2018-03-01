@@ -11,44 +11,44 @@ class CanvasDemo:
         frame = Frame(window)
         frame.pack()
 
-        btRectangle = Button(frame, text="Rectangle", command=self.displayRect)
-        btOval = Button(frame, text="Oval", command=self.displayOval)
-        btArc = Button(frame, text="Arc", command=self.displayArc)
-        btPolygon = Button(frame, text="Polygon", command=self.displayPolygon)
-        btLine = Button(frame, text="Line", command=self.displayLine)
-        btString = Button(frame, text="String", command=self.displayString)
-        btClear = Button(frame, text="Clear", command=self.clearCanvas)
+        self.v = IntVar()
 
-        btRectangle.grid(row=1, column=1)
-        btOval.grid(row=1, column=2)
-        btArc.grid(row=1, column=3)
-        btPolygon.grid(row=1, column=4)
-        btLine.grid(row=1, column=5)
-        btString.grid(row=1, column=6)
-        btClear.grid(row=1, column=7)
+        rdRectangle = Radiobutton(frame, text="Rectangle", variable = self.v, value = 1, command=self.displayRect)
+        rdOval = Radiobutton(frame, text="Oval", variable = self.v, value = 2, command=self.displayOval)
+        self.v2 = IntVar()
+        checkFilled = Checkbutton(frame, variable = self.v2, command=self.displayFilled)
+
+
+        rdRectangle.grid(row=1, column=1)
+        rdOval.grid(row=1, column=2)
+        checkFilled.grid(row=1, column=3)
 
         window.mainloop()
 
     def displayRect(self):
+        self.clearCanvas()
         self.canvas.create_rectangle(10, 10, 190, 90, tags="rect")
 
     def displayOval(self):
-        self.canvas.create_oval(10, 10, 190, 90, fill="red", tags="oval")
+        self.clearCanvas()
+        self.canvas.create_oval(10, 10, 190, 90, tags="oval")
 
-    def displayArc(self):
-        self.canvas.create_arc(10, 10, 190, 90, start=0, extent=90, width=8, fill="red", tags="arc")
-
-    def displayPolygon(self):
-        self.canvas.create_polygon(10, 10, 190, 90, 30, 50, tags="polygon")
-
-    def displayLine(self):
-        self.canvas.create_line(10, 10, 190, 90, fill="red", tags="line")
-        self.canvas.create_line(10, 90, 190, 10, width=9, arrow="last", activefill="blue", tags="line")
-
-    def displayString(self):
-        self.canvas.create_text(60, 40, text="Hello, world!", font="Times 10 bold underline", tags="string")
-
+    def displayFilled(self):
+        print(self.v2.get())
+        print(self.v.get())
+        if self.v2.get() == 1:
+            if self.v.get() == 1:
+                self.canvas.create_rectangle(10, 10, 190, 90, fill = "grey", tags="rect")
+            else:
+                self.canvas.create_oval(10, 10, 190, 90, fill = "grey", tags="oval")
+        else:
+            if self.v.get() == 1:
+                self.clearCanvas()
+                self.canvas.create_rectangle(10, 10, 190, 90, tags="rect")
+            else:
+                self.clearCanvas()
+                self.canvas.create_oval(10, 10, 190, 90, tags="oval")
     def clearCanvas(self):
-        self.canvas.delete("rect", "oval", "arc", "polygon", "line", "string")
+        self.canvas.delete("rect", "oval")
 
 CanvasDemo()

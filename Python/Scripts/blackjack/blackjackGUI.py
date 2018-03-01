@@ -1,9 +1,14 @@
 from tkinter import *
 import random
-import sys
+
 
 player_score = 0
 dealer_score = 0
+player_hand = 0
+dealer_hand = 0
+window = 0
+frame = 0
+player_label = ""
 
 SUITS = ['S', 'H', 'D', 'C']
 RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
@@ -94,7 +99,7 @@ class Deck:
 
 
 def deal():
-    global player_hand, dealer_hand, deck
+    global player_hand, dealer_hand, deck, window, frame, player_label
 
     deck = Deck()
     deck.shuffle()
@@ -108,18 +113,21 @@ def deal():
     dealer_hand.add_card(deck.deal_card())
     dealer_hand.add_card(deck.deal_card())
 
+    player_label["text"] = player_hand
+
+
     print("\nPlayer:", player_hand, "total:", player_hand.get_value())
     print("Dealer:", dealer_hand, "total:", dealer_hand.get_value())
 
-    choice = input("\nHit or stand? (h / s): ")
+    '''choice = input("\nHit or stand? (h / s): ")
     if choice == 'h':
         hit()
     elif choice == 's':
-        stand()
+        stand()'''
 
 
 def hit():
-    global player_score, dealer_score
+    global player_score, dealer_score, player_hand, dealer_hand
 
     if player_hand.get_value() <= 21:
         player_hand.add_card(deck.deal_card())
@@ -131,7 +139,7 @@ def hit():
         print("\nBusted!")
         dealer_score += 1
         show_scores()
-        play_again = input("\nPlay again? (y / n): ")
+        '''play_again = input("\nPlay again? (y / n): ")
         if play_again == 'y':
             deal()
         else:
@@ -141,7 +149,7 @@ def hit():
     if choice == 'h':
         hit()
     elif choice == 's':
-        stand()
+        stand()'''
 
 
 def show_scores():
@@ -163,32 +171,53 @@ def stand():
 
         player_score += 1
         show_scores()
-        play_again = input("\nPlay again? (y / n): ")
+        '''play_again = input("\nPlay again? (y / n): ")
         if play_again == 'y':
             deal()
         else:
-            sys.exit()
+            sys.exit()'''
     else:
         if dealer_hand.get_value() >= player_hand.get_value() or player_hand.get_value() > 21:
             print("\nDealer wins!")
             dealer_score += 1
             show_scores()
-            play_again = input("\nPlay again? (y / n): ")
+            '''play_again = input("\nPlay again? (y / n): ")
             if play_again == 'y':
                 deal()
             else:
-                sys.exit()
+                sys.exit()'''
         else:
             print("\nPlayer wins!")
             player_score += 1
             show_scores()
-            play_again = input("\nPlay again? (y / n): ")
+            '''play_again = input("\nPlay again? (y / n): ")
             if play_again == 'y':
                 deal()
             else:
-                sys.exit()
+                sys.exit()'''
 
 
-deal()
+def main():
 
+    global player_hand, dealer_hand, window, frame, player_label
+
+    window = Tk()
+    window.title("Blackjack")
+
+    frame = Frame(window)
+    frame.pack()
+
+    player_label = Label(frame, text="")
+
+    btDeal = Button(frame, width = 20, height = 10, text="Deal", command=deal)
+    btHit = Button(frame, width = 20, height = 10, text="Hit", command=hit)
+    btStand = Button(frame, width = 20, height = 10, text="Stand", command=stand)
+
+    btDeal.grid(row=1, column=1)
+    btHit.grid(row=1, column=2)
+    btStand.grid(row=1, column=3)
+
+    window.mainloop()
+
+main()
 
