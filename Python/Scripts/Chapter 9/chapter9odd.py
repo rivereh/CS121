@@ -11,7 +11,7 @@ class CheckerBoard:
 
         for i in range(10):
             if i % 2 == 0:
-                self.canvas.create_rectangle(100 * i, 100, 100 * i, 100)
+                self.canvas.create_rectangle(100, 100, 10, 10, fill="black")
 
         window.mainloop()
 

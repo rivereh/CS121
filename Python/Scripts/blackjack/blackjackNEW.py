@@ -1,7 +1,7 @@
 from tkinter import *
 import random
-import sys
 
+# initialize global variables used in deck and card creation
 SUITS = ['S', 'H', 'D', 'C']
 RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
 VALUES = {'A': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, 'J': 10, 'Q': 10, 'K': 10}
@@ -21,7 +21,7 @@ class Card:
             self.count = None
             print("Invalid card: ", suit, rank, count)
 
-    def __str__(self):
+    def get_card(self):
         return self.suit + self.rank
 
     def get_suit(self):
@@ -41,12 +41,12 @@ class Hand:
     def __init__(self):
         self.cards = []
 
-    def __str__(self):
+    def get_hand(self):
         result = ""
         card_count = 0
         for card in self.cards:
             card_count += 1
-            result += card.__str__()
+            result += card.get_card()
             if card_count != len(self.cards):
                 result += ", "
 
@@ -92,12 +92,12 @@ class Deck:
     def deal_card(self):
         return self.cards.pop(0)
 
-    def __str__(self):
-        result = ""
+    def get_deck(self):
+        deck_list = ""
         for card in self.cards:
-            result += " " + card.__str__()
+            deck_list += " " + card.get_card()
 
-        return "Deck contains: " + result
+        return deck_list
 
 
 class Blackjack:
@@ -139,15 +139,19 @@ class Blackjack:
         self.dealer_image_list = []
         self.dealer_label_list = []
 
+        #
         self.frame4 = Frame(self.window)
         self.frame4.pack()
 
+        # game status GUI
         self.game_status = Label(self.frame4, text="")
         self.game_status.pack()
 
+        # dealer score GUI
         self.dealer_status = Label(self.frame4, text="Press Deal to start!")
         self.dealer_status.pack()
 
+        # player score GUI
         self.player_status = Label(self.frame4, text ="")
         self.player_status.pack()
 
@@ -175,9 +179,6 @@ class Blackjack:
         self.dealer_card_hit_count = 1
 
     def deal(self):
-
-
-
         if self.safe_to_clear:
             self.clear()
 
@@ -212,8 +213,7 @@ class Blackjack:
         self.dealer_status["text"] = "Dealer total: " + str(self.dealer_hand.get_value())
         self.player_status["text"] = "Player total: " + str(self.player_hand.get_value())
 
-        print("\nPlayer:", self.player_hand, "total:", self.player_hand.get_value())
-        print("Dealer:", self.dealer_hand, "total:", self.dealer_hand.get_value())
+        self.get_player_values()
 
         self.safe_to_clear = True
 
@@ -230,8 +230,7 @@ class Blackjack:
 
         self.player_status["text"] = "Player total: " + str(self.player_hand.get_value())
 
-        print("\nPlayer:", self.player_hand, "total:", self.player_hand.get_value())
-        print("Dealer:", self.dealer_hand, "total:", self.dealer_hand.get_value())
+        self.get_player_values()
 
         if self.player_hand.get_value() > 21:
             print("\nBusted!")
@@ -244,6 +243,10 @@ class Blackjack:
 
     def show_scores(self):
         print("\nPlayer:", self.player_score, "\nDealer:", self.dealer_score)
+
+    def get_player_values(self):
+        print("\nPlayer:", self.player_hand.get_hand(), "total:", self.player_hand.get_value())
+        print("Dealer:", self.dealer_hand.get_hand(), "total:", self.dealer_hand.get_value())
 
     def stand(self):
         while self.dealer_hand.get_value() < 17:
@@ -263,8 +266,7 @@ class Blackjack:
 
         self.dealer_status["text"] = "Dealer total: " + str(self.dealer_hand.get_value())
 
-        print("\nPlayer:", self.player_hand, "total:", self.player_hand.get_value())
-        print("Dealer:", self.dealer_hand, "total:", self.dealer_hand.get_value())
+        self.get_player_values()
 
         if self.dealer_hand.get_value() > 21:
             print("\nDealer busted, Player wins!")
