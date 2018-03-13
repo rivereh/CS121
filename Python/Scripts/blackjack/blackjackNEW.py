@@ -1,3 +1,11 @@
+"""
+    CS121 W18
+    BLACKJACK
+    RIVER, ARON, JIN
+    3/13/18
+    PYTHON 3.6.4
+"""
+
 from tkinter import *
 import random
 import pickle
@@ -10,6 +18,8 @@ SHOW_DEBUG = False
 # class for individual cards containing the card's
 # suit, rank, and number within the unshuffled deck
 class Card:
+    # initialize cards values, when a card is created in the Deck
+    # class, it will store the cards suit, rank, and number within the deck
     def __init__(self, suit, rank, count):
         self.suit = suit
         self.rank = rank
@@ -17,27 +27,35 @@ class Card:
         self.ace_value = 1
         self.ace_set = False
 
+    # return cards suit and rank. ex. ('S5' for five of spades)
     def get_card(self):
         return self.suit + self.rank
 
-    def get_suit(self):
-        return self.suit
-
+    # return the cards rank, used later in evaluating the cards value
     def get_rank(self):
         return self.rank
 
+    # returns the cards number within an ordered deck
     def get_count(self):
         return self.count
 
+    # sets the card's ace value, either 1 or 11
     def set_ace_value(self, value):
         self.ace_value = value
 
+    # returns the value that has been set for the card, if it
+    # is an ace, automatically depening on the hand's total score
+    # the cards value will either be 1 or 11
     def get_ace_value(self):
         return self.ace_value
 
+    # returns whether the card has been checked as an ace card
     def get_ace_set(self):
         return self.ace_set
 
+    # sets the card, if it contains an ace, as checked, used in fixing
+    # a bug where aces that were initally added to a hand as 11 would
+    # change to 1 if the hand's score got above 21
     def set_ace_set(self):
         self.ace_set = True
 
@@ -50,6 +68,8 @@ class Hand:
         # assign values to each rank, used in assigning a value to a card
         self.values = {'A': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, 'J': 10,
                        'Q': 10, 'K': 10}
+        
+        # initialize empty cards array, used in storing hand's cards
         self.cards = []
 
     # function to get the current cards in the hand
@@ -66,15 +86,18 @@ class Hand:
     def add_card(self, card):
         self.cards.append(card)
 
-    def get_cards(self):
-        return self.cards
-
+    # function to find the value of the hand
     def get_value(self):
         value = 0
+        # compare the rank of each card with the values variable and add it
+        # to the hand's value
         for card in self.cards:
             rank = card.get_rank()
             value += self.values[rank]
 
+            # check if the card is an ace, if so and if the player is under 11 in score and
+            # the current card has not been checked before than add 11 to the value
+            # otherwise add 1
             if rank == 'A':
                 value -= 1
                 if value < 11 and not card.get_ace_set():
@@ -125,24 +148,33 @@ class Deck:
 # class containing all of the game's functions
 class Blackjack:
     def __init__(self):
+        # intialize game variables
         self.player_hand = 0
         self.dealer_hand = 0
         self.deck = 0
-        self.in_game = False
-
         self.player_score = 0
         self.dealer_score = 0
+
+        self.in_game = False
+        self.safe_to_clear = False
+
         self.scores_file = "scores.data"
 
+        # check if the scores files is larger than 0 meaning it contains data,
+        # if so then set the scores saved inside the file to the dealer and
+        # players score
         if os.path.getsize(self.scores_file) > 0:
             score_pickle = open(self.scores_file, 'rb')
             saved_scores = pickle.load(score_pickle)
             self.dealer_score = saved_scores[0]
             self.player_score = saved_scores[1]
 
+        # these are used in determining what card in the hand should be
+        # drawn to the screen
         self.player_card_hit_count = 1
         self.dealer_card_hit_count = 1
 
+        # intialize the playing window
         self.window = Tk()
         self.window.title("Blackjack")
 
@@ -150,52 +182,52 @@ class Blackjack:
         menubar = Menu(self.window)
         self.window.config(menu=menubar)  # set windows Menu to menubar
 
-        # create pulldown
+        # create pulldown for options
         option_menu = Menu(menubar, tearoff=0)
         menubar.add_cascade(label="Options", menu=option_menu)
         option_menu.add_command(label="Clear Scores", command=self.clear_scores)
         option_menu.add_separator()
         option_menu.add_cascade(label="Quit", command=self.window.quit)
 
-        self.frame = Frame(self.window)
-        self.frame.pack()
-        self.safe_to_clear = False
+        # frame and button for the deal/hit/stand functions
+        self.button_frame = Frame(self.window)
+        self.button_frame.pack()
 
+        bt_deal = Button(self.button_frame, width = 20, height = 10, text = "Deal", command = self.deal)
+        bt_hit = Button(self.button_frame, width = 20, height = 10, text = "Hit", command = self.hit)
+        bt_stand = Button(self.button_frame, width = 20, height = 10, text = "Stand", command = self.stand)
 
-        bt_deal = Button(self.frame, width=20, height=10, text="Deal", command=self.deal)
-        bt_hit = Button(self.frame, width=20, height=10, text="Hit", command=self.hit)
-        bt_stand = Button(self.frame, width=20, height=10, text="Stand", command=self.stand)
+        bt_deal.grid(row = 1, column = 1, pady = 10)
+        bt_hit.grid(row = 1, column = 2, pady = 10)
+        bt_stand.grid(row = 1, column = 3, pady = 10)
 
-        bt_deal.grid(row=1, column=1, pady=10)
-        bt_hit.grid(row=1, column=2, pady=10)
-        bt_stand.grid(row=1, column=3, pady=10)
-
+        # frame for the dealer and players cards and the label 
+        # and image lists, used in holding which cards should be
+        # drawn to the screen
         self.dealer_frame = Frame(self.window)
         self.dealer_frame.pack()
-
-        self.player_image_list = []
-        self.player_label_list = []
-
-        self.player_frame = Frame(self.window)
-        self.player_frame.pack()
-
-        self.dealer_image_list = []
         self.dealer_label_list = []
+        self.dealer_image_list = []
+
+        self.player_frame = Frame(self.window) 
+        self.player_frame.pack()
+        self.player_label_list = []
+        self.player_image_list = []
 
         # game status GUI
-        self.game_status = Label(self.window, text="Press Deal to start!")
+        self.game_status = Label(self.window, text = "Press Deal to start!")
         self.game_status.pack()
 
         # frame for dealer / player status
         self.status_frame = Frame(self.window)
-        self.status_frame.pack(side=LEFT)
+        self.status_frame.pack(side = LEFT)
 
         # dealer status GUI
-        self.dealer_status = Label(self.status_frame, text="")
+        self.dealer_status = Label(self.status_frame, text = "")
         self.dealer_status.pack()
 
         # player status GUI
-        self.player_status = Label(self.status_frame, text="")
+        self.player_status = Label(self.status_frame, text = "")
         self.player_status.pack()
 
         # frame for dealer / player score
@@ -233,6 +265,9 @@ class Blackjack:
         self.player_card_hit_count = 1
         self.dealer_card_hit_count = 1
 
+    # function for the clear scores option in the menu bar
+    # resets dealer and player's scores and clears the
+    # scores.data file and GUI labels
     def clear_scores(self):
         self.dealer_score_label["text"] = "Dealer score: 0"
         self.player_score_label["text"] = "Player score: 0"
@@ -266,7 +301,6 @@ class Blackjack:
             self.player_hand.add_card(self.deck.deal_card())
             self.dealer_hand.add_card(self.deck.deal_card())
 
-        # TODO describe this better
         # by using the cards "count" number we can find the appropriate image from the
         # cards folder, then we add the images to the player's image list
         # which is then looped through and added to the label list which is drawn onto the canvas
@@ -296,7 +330,7 @@ class Blackjack:
                 self.player_hand.cards[self.player_card_hit_count].get_count()) + ".gif"))
             self.player_label_list.append(
                 Label(self.player_frame, image=self.player_image_list[self.player_card_hit_count]))
-            self.player_label_list[self.player_card_hit_count].pack(side=LEFT)
+            self.player_label_list[self.player_card_hit_count].pack(side = LEFT)
 
             self.update_values()
 
@@ -335,11 +369,13 @@ class Blackjack:
 
     def stand(self):
         if self.in_game:
+            # if the dealers value is under 17 than add a new card to their hand
             while self.dealer_hand.get_value() < 17:
                 self.dealer_hand.add_card(self.deck.deal_card())
+                # add one to the dealers card hit count, used in determining what card needs
+                # to be added to the screen
                 self.dealer_card_hit_count += 1
 
-                print(self.dealer_hand.cards[self.dealer_card_hit_count].get_count())
                 self.dealer_image_list.append(
                     PhotoImage(
                         file="cards/" + str(self.dealer_hand.cards[self.dealer_card_hit_count].get_count()) + ".gif"))
