@@ -15,6 +15,7 @@ class Card:
             self.suit = suit
             self.rank = rank
             self.count = count
+            self.card_back_number = 55
         else:
             self.suit = None
             self.rank = None
