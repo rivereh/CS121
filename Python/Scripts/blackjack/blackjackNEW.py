@@ -160,6 +160,9 @@ class Blackjack:
 
         self.scores_file = "scores.data"
 
+        if os.path.exists("scores.data"):
+            with open("scores.data", 'w'):pass
+
         # check if the scores files is larger than 0 meaning it contains data,
         # if so then set the scores saved inside the file to the dealer and
         # players score
