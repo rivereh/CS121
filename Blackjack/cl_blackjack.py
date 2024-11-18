@@ -1,3 +1,11 @@
+"""
+    CS121 W18
+    COMMAND LINE BLACKJACK
+    RIVER
+    3/13/18
+    PYTHON 3.6.4
+"""
+
 from tkinter import *
 import random
 import sys
@@ -7,7 +15,8 @@ dealer_score = 0
 
 SUITS = ['S', 'H', 'D', 'C']
 RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
-VALUES = {'A': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, 'J': 10, 'Q': 10, 'K': 10}
+VALUES = {'A': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6,
+          '7': 7, '8': 8, '9': 9, '10': 10, 'J': 10, 'Q': 10, 'K': 10}
 
 
 class Card:
@@ -31,7 +40,7 @@ class Card:
         return self.rank
 
     def get_image(self):
-        return PhotoImage(file = "card/" + self.count)
+        return PhotoImage(file="card/" + self.count)
 
 
 class Hand:
@@ -190,4 +199,3 @@ def stand():
 
 
 deal()
-

@@ -1,7 +1,7 @@
 """
     CS121 W18
-    BLACKJACK
-    RIVER, ARON, JIN
+    BLACKJACK WITH GUI
+    RIVER
     3/13/18
     PYTHON 3.6.4
 """
@@ -68,7 +68,7 @@ class Hand:
         # assign values to each rank, used in assigning a value to a card
         self.values = {'A': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, 'J': 10,
                        'Q': 10, 'K': 10}
-        
+
         # initialize empty cards array, used in storing hand's cards
         self.cards = []
 
@@ -113,7 +113,8 @@ class Deck:
     def __init__(self):
         # suit and ranks used in card creation
         self.suits = ['S', 'H', 'D', 'C']
-        self.ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+        self.ranks = ['A', '2', '3', '4', '5', '6',
+                      '7', '8', '9', '10', 'J', 'Q', 'K']
 
         # initialize the deck's card array
         self.cards = []
@@ -163,7 +164,8 @@ class Blackjack:
 
         # check if the scores.data file exists and if not, create an new one
         if not os.path.exists("scores.data"):
-            with open("scores.data", 'w'): pass
+            with open("scores.data", 'w'):
+                pass
 
         # check if the scores files is larger than 0 meaning it contains data,
         # if so then set the scores saved inside the file to the dealer and
@@ -190,8 +192,10 @@ class Blackjack:
         # create pull-down for options with Rules, Clear Scores, and Quit
         option_menu = Menu(menubar, tearoff=0)
         menubar.add_cascade(label="Options", menu=option_menu)
-        option_menu.add_command(label="Blackjack Rules", command=self.show_rules)
-        option_menu.add_command(label="Clear Scores", command=self.clear_scores)
+        option_menu.add_command(label="Blackjack Rules",
+                                command=self.show_rules)
+        option_menu.add_command(label="Clear Scores",
+                                command=self.clear_scores)
         option_menu.add_separator()
         option_menu.add_cascade(label="Quit", command=self.window.quit)
 
@@ -199,16 +203,19 @@ class Blackjack:
         self.button_frame = Frame(self.window)
         self.button_frame.pack()
 
-        bt_deal = Button(self.button_frame, width = 20, height = 10, text = "Deal", command = self.deal)
-        bt_hit = Button(self.button_frame, width = 20, height = 10, text = "Hit", command = self.hit)
-        bt_stand = Button(self.button_frame, width = 20, height = 10, text = "Stand", command = self.stand)
+        bt_deal = Button(self.button_frame, width=20,
+                         height=10, text="Deal", command=self.deal)
+        bt_hit = Button(self.button_frame, width=20, height=10,
+                        text="Hit", command=self.hit)
+        bt_stand = Button(self.button_frame, width=20,
+                          height=10, text="Stand", command=self.stand)
 
         # aligning buttons in a row
-        bt_deal.grid(row = 1, column = 1, pady = 10)
-        bt_hit.grid(row = 1, column = 2, pady = 10)
-        bt_stand.grid(row = 1, column = 3, pady = 10)
+        bt_deal.grid(row=1, column=1, pady=10)
+        bt_hit.grid(row=1, column=2, pady=10)
+        bt_stand.grid(row=1, column=3, pady=10)
 
-        # frame for the dealer and players cards and the label 
+        # frame for the dealer and players cards and the label
         # and image lists, used in holding which cards should be
         # drawn to the screen
         self.dealer_frame = Frame(self.window)
@@ -216,25 +223,25 @@ class Blackjack:
         self.dealer_label_list = []
         self.dealer_image_list = []
 
-        self.player_frame = Frame(self.window) 
+        self.player_frame = Frame(self.window)
         self.player_frame.pack()
         self.player_label_list = []
         self.player_image_list = []
 
         # game status GUI
-        self.game_status = Label(self.window, text = "Press Deal to start!")
+        self.game_status = Label(self.window, text="Press Deal to start!")
         self.game_status.pack()
 
         # frame for dealer / player status
         self.status_frame = Frame(self.window)
-        self.status_frame.pack(side = LEFT)
+        self.status_frame.pack(side=LEFT)
 
         # dealer status GUI
-        self.dealer_status = Label(self.status_frame, text = "")
+        self.dealer_status = Label(self.status_frame, text="")
         self.dealer_status.pack()
 
         # player status GUI
-        self.player_status = Label(self.status_frame, text = "")
+        self.player_status = Label(self.status_frame, text="")
         self.player_status.pack()
 
         # frame for dealer / player score
@@ -242,11 +249,13 @@ class Blackjack:
         self.score_frame.pack(side=RIGHT)
 
         # dealer score GUI
-        self.dealer_score_label = Label(self.score_frame, text="Dealer score: %d" % self.dealer_score)
+        self.dealer_score_label = Label(
+            self.score_frame, text="Dealer score: %d" % self.dealer_score)
         self.dealer_score_label.pack()
 
         # player score GUI
-        self.player_score_label = Label(self.score_frame, text="Player score: %d" % self.player_score)
+        self.player_score_label = Label(
+            self.score_frame, text="Player score: %d" % self.player_score)
         self.player_score_label.pack()
 
         self.window.mainloop()
@@ -257,17 +266,16 @@ class Blackjack:
         help_window.title("Rules")
 
         label = Label(help_window, text="\t\t\tGoal:\n\n"
-                                      "Beat the dealer by gathering a hand that's as close to 21"
-                      , justify=LEFT, pady=15)
+                      "Beat the dealer by gathering a hand that's as close to 21", justify=LEFT, pady=15)
         label2 = Label(help_window, text="\t\t\t               Rules:\n\n"
-                                       "1. Aces can be worth 1 or 11, if the hand's hand is under 10\n"
-                                       "   then 11 will be added to the hand, otherwise 1 will be added\n\n"
-                                       "2. Face cards (King, Queen, Jack) are worth 10 points\n\n"
-                                       "3. A player will bust when their hand exceeds 21\n\n"
-                                       "4. The Dealer will deal two cards at the beginning that make up your hand\n\n"
-                                       "5. The player can hit to add cards to his hand\n\n"
-                                       "6. The player can stand if they are content with their hand\n\n"
-                                       "7. The player can deal to start a new game", justify=LEFT, padx=50, pady=20)
+                       "1. Aces can be worth 1 or 11, if the hand's hand is under 10\n"
+                       "   then 11 will be added to the hand, otherwise 1 will be added\n\n"
+                       "2. Face cards (King, Queen, Jack) are worth 10 points\n\n"
+                       "3. A player will bust when their hand exceeds 21\n\n"
+                       "4. The Dealer will deal two cards at the beginning that make up your hand\n\n"
+                       "5. The player can hit to add cards to his hand\n\n"
+                       "6. The player can stand if they are content with their hand\n\n"
+                       "7. The player can deal to start a new game", justify=LEFT, padx=50, pady=20)
 
         label.pack()  # Place the object of the game label in the window
         label2.pack()  # Place the rules label in the window
@@ -350,13 +358,15 @@ class Blackjack:
         for i in range(len(self.dealer_hand.cards)):
             self.dealer_image_list.append(PhotoImage(file="cards/" +
                                                           str(self.dealer_hand.cards[i].get_count()) + ".gif"))
-            self.dealer_label_list.append(Label(self.dealer_frame, image=self.dealer_image_list[i]))
+            self.dealer_label_list.append(
+                Label(self.dealer_frame, image=self.dealer_image_list[i]))
             self.dealer_label_list[i].pack(side=LEFT)
 
         for i in range(len(self.player_hand.cards)):
             self.player_image_list.append(PhotoImage(file="cards/" +
                                                           str(self.player_hand.cards[i].get_count()) + ".gif"))
-            self.player_label_list.append(Label(self.player_frame, image=self.player_image_list[i]))
+            self.player_label_list.append(
+                Label(self.player_frame, image=self.player_image_list[i]))
             self.player_label_list[i].pack(side=LEFT)
 
         # after the cards have been dealt, update the dealer and player values
@@ -380,7 +390,7 @@ class Blackjack:
                 self.player_hand.cards[self.player_card_hit_count].get_count()) + ".gif"))
             self.player_label_list.append(
                 Label(self.player_frame, image=self.player_image_list[self.player_card_hit_count]))
-            self.player_label_list[self.player_card_hit_count].pack(side = LEFT)
+            self.player_label_list[self.player_card_hit_count].pack(side=LEFT)
 
             # update the score UI for the dealer and player
             self.update_values()
@@ -399,11 +409,15 @@ class Blackjack:
 
     # function used in updating the hand values and the UI representing it
     def update_values(self):
-        self.dealer_status["text"] = "Dealer total: " + str(self.dealer_hand.get_value())
-        self.player_status["text"] = "Player total: " + str(self.player_hand.get_value())
+        self.dealer_status["text"] = "Dealer total: " + \
+            str(self.dealer_hand.get_value())
+        self.player_status["text"] = "Player total: " + \
+            str(self.player_hand.get_value())
         if SHOW_DEBUG:
-            print("\nDealer:", self.dealer_hand.get_hand(), "total:", self.dealer_hand.get_value())
-            print("Player:", self.player_hand.get_hand(), "total:", self.player_hand.get_value())
+            print("\nDealer:", self.dealer_hand.get_hand(),
+                  "total:", self.dealer_hand.get_value())
+            print("Player:", self.player_hand.get_hand(),
+                  "total:", self.player_hand.get_value())
 
     # function used in updating the game status and score UI
     def update_game_status(self, color, text):
@@ -420,7 +434,8 @@ class Blackjack:
 
         if SHOW_DEBUG:
             print("\n%s" % text)
-            print("\nDealer:", self.dealer_score, "\nPlayer:", self.player_score)
+            print("\nDealer:", self.dealer_score,
+                  "\nPlayer:", self.player_score)
 
     # if the game is active then update the dealers hand and compare scores
     def stand(self):
@@ -439,7 +454,8 @@ class Blackjack:
 
                 self.dealer_label_list.append(
                     Label(self.dealer_frame, image=self.dealer_image_list[self.dealer_card_hit_count]))
-                self.dealer_label_list[self.dealer_card_hit_count].pack(side=LEFT)
+                self.dealer_label_list[self.dealer_card_hit_count].pack(
+                    side=LEFT)
 
             # update the score values
             self.update_values()

@@ -2,10 +2,11 @@
     CS121 W18
     DRAWS SHAPES USING TURTLE
     CHECK BOTTOM OF FILE FOR FUNCTIONS
-    RIVER HILL
+    RIVER
     1/14/18
     PYTHON 3.6.4
 """
+
 import turtle
 
 

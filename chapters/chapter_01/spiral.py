@@ -1,7 +1,7 @@
 """
     CS121 W18
     PRINTS A SPIRAL
-    RIVER HILL
+    RIVER
     1/14/18
     PYTHON 3.6.4
 """
