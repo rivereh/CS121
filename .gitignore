@@ -1,6 +1,1 @@
-python/venv
-
-python/.idea
-pythonintropdf.pdf
-
-python/scripts/blackjack/scores.data
+blackjack/scores.data
